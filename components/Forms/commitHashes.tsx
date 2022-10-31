@@ -1,17 +1,22 @@
-import react, { SetStateAction, useState } from "react";
+import react, { SetStateAction, useContext, useState, Dispatch } from "react";
 import { Grid, Input, StyledInputLabel } from "@nextui-org/react";
 import { useForm, SubmitHandler, Controller } from "react-hook-form";
 import { Container, Row, Text, Spacer, Badge } from "@nextui-org/react";
 import { Button } from "@nextui-org/react";
 import { CommitHash } from "../../types/types";
 import CommitBadge from "./commitBadge";
+import {CommitHashContext} from '../../context/CommitHashContext'
+import { CommitHashContextType } from "../../types/context.types";
 
 interface IFormInput {
   label:string,
   value: string
 }
 
-const CommitHashes: React.FC = () => {
+const CommitHashes: React.FC<{setStage: Dispatch<SetStateAction<string>>}> = ({setStage}) => {
+
+  const {saveCommitHash} = useContext(CommitHashContext) as CommitHashContextType
+
   const [label, setLabel] = useState("");
   const [value, setValue] = useState("");
   const [commitHash, setCommitHash] = useState<CommitHash[]>([]);
@@ -25,8 +30,11 @@ const CommitHashes: React.FC = () => {
     setValue("");
   };
 
-  const { control, handleSubmit, register } = useForm<IFormInput>();
-  const onSubmit: SubmitHandler<IFormInput> = (data) => console.log(data);
+  const { control, handleSubmit } = useForm<IFormInput>();
+  const onSubmit: SubmitHandler<IFormInput> = (data) => {
+    saveCommitHash(commitHash);
+    setStage('Findings')
+  };
 
   return (
     <Container css={{ height: "100%", width: "100%" }}>
@@ -57,7 +65,6 @@ const CommitHashes: React.FC = () => {
                 control={control}
                 render={({ field }) => (
                   <Input
-                    required
                     label="Label"
                     onChange={(e) => setLabel(e.target.value)}
                     value={label}

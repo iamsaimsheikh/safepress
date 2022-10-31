@@ -1,4 +1,4 @@
-import react, { SetStateAction, useState } from "react";
+import react, { SetStateAction, useContext, useState, Dispatch } from "react";
 import { Grid, Input, StyledInputLabel } from "@nextui-org/react";
 import { useForm, SubmitHandler, Controller } from "react-hook-form";
 import { Container, Row, Text, Spacer } from "@nextui-org/react";
@@ -10,6 +10,8 @@ import {
 } from "../../types/audit.enum";
 import WWEditor from "./wizywyg";
 import { Finding } from "../../types/types";
+import {FindingContextType} from "../../types/context.types";
+import {FindingContext} from "../../context/FindingContext";
 
 interface IFormInput {
   title: string;
@@ -25,7 +27,8 @@ interface IFormInput {
   };
 }
 
-const Findings: React.FC = () => {
+const Findings: React.FC<{setStage: Dispatch<SetStateAction<string>>}> = ({setStage}) => {
+  const {saveFinding} = useContext(FindingContext) as FindingContextType;
   const [description, setDescription] = useState("");
   const [recommendation, setRecommendation] = useState("");
   const [findings, setFindings] = useState<Finding[]>([]);
@@ -50,7 +53,7 @@ const Findings: React.FC = () => {
     setDescription('');
     setRecommendation('');
     reset();
-    console.log(findings);
+    saveFinding(findings);
   };
 
   return (
@@ -263,12 +266,12 @@ const Findings: React.FC = () => {
                 paddingRight: "2vw",
               }}
             >
-              <Button size="xs" >
+              <Button size="xs" onPress={() => setStage('Finalizing')}>
                 Next
               </Button>
             </Grid>
           </Grid.Container>
-          <Spacer y={1} />
+          <Spacer y={2} />
         </form>
       </Row>
     </Container>

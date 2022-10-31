@@ -17,9 +17,9 @@ const NewAuditStages: React.FC<{ stage: string }> = ({ stage }) => {
   return (
     <Col>
     <>
-      {options.map((option: string) => {
+      {options.map((option: string, key : number) => {
        return <>
-        <Text h6 size={16} color={option == stage ? 'blue' : 'gray'} css={{ m: 0 }}>
+        <Text key={key} h6 size={16} color={option == stage ? 'blue' : 'gray'} css={{ m: 0 }}>
           {option}
         </Text>
         <Spacer y={1} />

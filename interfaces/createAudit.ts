@@ -1,6 +1,6 @@
 import {
     ETestsStatus,
-    TFindingLocationType,
+    EFindingLocationType,
     EClassification,
     EFindingStatus,
     EExecutiveSummary,
@@ -44,7 +44,7 @@ import {
 
   
   interface Location {
-    type: TFindingLocationType;
+    type: EFindingLocationType;
   
     name: string;
   

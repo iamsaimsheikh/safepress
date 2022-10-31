@@ -1,4 +1,4 @@
-import react, { SetStateAction, useState } from "react";
+import react, { SetStateAction, useContext, useState, Dispatch } from "react";
 import { Grid, Input, StyledInputLabel } from "@nextui-org/react";
 import { useForm, SubmitHandler, Controller } from "react-hook-form";
 import { Container, Row, Text, Spacer, Badge } from "@nextui-org/react";
@@ -6,6 +6,9 @@ import { Button } from "@nextui-org/react";
 import { Auditor } from "../../types/types";
 import { ETestsStatus } from "../../types/audit.enum";
 import NameBadge from "./nameBadge";
+import { ScopeContextType } from "../../types/context.types";
+import { Scope as ScopeType } from "../../types/types";
+import { ScopeContext } from "../../context/ScopeContext";
 
 interface IFormInput {
   repository_link: string;
@@ -18,7 +21,8 @@ interface IFormInput {
   smart_contract_audited: string;
 }
 
-const Scope: React.FC = () => {
+const Scope: React.FC<{setStage: Dispatch<SetStateAction<string>>}> = ({setStage}) => {
+  const {saveScope} = useContext(ScopeContext) as ScopeContextType;
   const [auditorFirstName, setAuditorFirstName] = useState("");
   const [auditorLastName, setAuditorLastName] = useState("");
   const [auditors, setAuditors] = useState<Auditor[]>([]);
@@ -46,7 +50,29 @@ const Scope: React.FC = () => {
   };
 
   const { control, handleSubmit, register } = useForm<IFormInput>();
-  const onSubmit: SubmitHandler<IFormInput> = (data) => console.log(data);
+  const onSubmit: SubmitHandler<IFormInput> = (data) => {
+
+    let rArr : any = [];
+    let aArr : any = [];
+    const auditArr: any = auditors.forEach((aud: Auditor, index: number) => {
+      aArr.push(aud);
+    });
+
+    const revArr: any = reviewers.forEach((rev: Auditor) => {
+       rArr.push(rev);
+    });
+
+    saveScope({
+      repository_link: data.repository_link,
+      documentation: [data.documentation],
+      tests_status: data.tests_status,
+      auditors: aArr,
+      reviewed_by: rArr,
+      smart_contract_audited: [data.smart_contract_audited],
+    });
+
+    setStage('Commit Hashes')
+  };
 
   return (
     <Container css={{ height: "100%", width: "100%" }}>
@@ -198,19 +224,23 @@ const Scope: React.FC = () => {
           </Grid>
           <Spacer y={1.5} />
           <Grid.Container css={{ width: "100%" }}>
-            <Grid  css={{display:'flex', flexDirection:'column'}}>
-                <StyledInputLabel css={{fontWeight:'$normal', fontSize:'14px', height:'42%'}} >Test Status</StyledInputLabel>
+            <Grid css={{ display: "flex", flexDirection: "column" }}>
+              <StyledInputLabel
+                css={{ fontWeight: "$normal", fontSize: "14px", height: "42%" }}
+              >
+                Test Status
+              </StyledInputLabel>
               <select
                 style={{
                   fontSize: "13px",
                   background: "#f1f3f5",
                   color: "black",
                   borderRadius: "10px",
-                  border:'none',
+                  border: "none",
                   outline: "none",
                   width: "11vw",
                   height: "5.5vh",
-                  padding:'10px'
+                  padding: "10px",
                 }}
                 {...register("tests_status")}
               >
