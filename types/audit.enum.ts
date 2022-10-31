@@ -27,7 +27,7 @@ export enum EFindingStatus {
   FIXED = "FIXED",
 }
 
-export enum TFindingLocationType {
+export enum EFindingLocationType {
   FUNCTION = "FUNCTION",
   VARIABLE = "VARIABLE",
   GENERAL = "GENERAL",
