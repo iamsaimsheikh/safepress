@@ -14,6 +14,7 @@ const FormContainer: React.FC<{
   stage: string;
   setStage: Dispatch<SetStateAction<string>>;
 }> = ({ stage, setStage }) => {
+
   return (
     <>
       <ScopeProvider>

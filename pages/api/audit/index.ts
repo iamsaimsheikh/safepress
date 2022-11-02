@@ -15,7 +15,7 @@ const auditHandler = async (req: NextApiRequest, res: NextApiResponse) => {
     method: req.method,
   };
 
-  const data: CreateAuditDto = request.data;
+  const data: any = request.data;
 
   // try {
   //   const newAudit = await collection.insertOne(data);
@@ -32,15 +32,17 @@ const auditHandler = async (req: NextApiRequest, res: NextApiResponse) => {
   if (request.method == "POST") {
     try {
       const newAudit = await collection
-        .insertOne(data)
+        .insertOne(JSON.parse(data))
         .then(() => {
           res.status(200).json(data);
         })
         .catch((e: any) => {
           res.send(e);
+          console.log(e)
         });
     } catch (e: any) {
-      res.status(404).send("Not Found!");
+      res.status(404).send(e);
+      console.log(e)
     }
   }
 
