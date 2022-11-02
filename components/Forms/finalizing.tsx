@@ -14,10 +14,19 @@ import { ScopeContext } from "../../context/ScopeContext";
 import { CommitHashContext } from "../../context/CommitHashContext";
 import { FindingContext } from "../../context/FindingContext";
 import { Audit, CommitHash, Finding } from "../../types/types";
+import axios from 'axios'
 
 interface IFormInput {
   version: string;
   custom_audit_id: string;
+}
+
+const addAudit = async (data : any) => {
+  await axios.post('http://localhost:3000/api/audit', data).then((res) => {
+    console.log(res.data);
+  }).catch((e) => {
+    console.log(e);
+  })
 }
 
 const Finalizing: React.FC<{setStage: Dispatch<SetStateAction<string>>}> = ({setStage}) => {
@@ -50,6 +59,8 @@ const Finalizing: React.FC<{setStage: Dispatch<SetStateAction<string>>}> = ({set
         commit_hashes: commitHashArr,
         findings: findingArr,
       })
+
+      addAudit(audit);
 
   };
   return (

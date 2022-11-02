@@ -15,10 +15,11 @@ export const Layout = ({ children }: any) => {
     >
       <Navbar variant="static" css={{justifyContent:'center'}} >
         <Navbar.Brand>
-        <Image src={Logo} style={{transform:'scale(0.5,0.5)'}} />
+        <Image src={Logo} onClick= {() => router.push('/')} style={{transform:'scale(0.5,0.5)', cursor:'pointer'}} />
         </Navbar.Brand>
         <Navbar.Content hideIn="xs" css={{marginLeft:'3vw'}}>
-          <Navbar.Link isActive onClick={() => router.push('audit/new')} href="#">New Audit</Navbar.Link>
+          <Navbar.Link  onClick={() => router.push('audit/new')} href="#">New Audit</Navbar.Link>
+          <Navbar.Link isActive onClick={() => router.push('/')} href="#">Audits</Navbar.Link>
         </Navbar.Content>
       </Navbar>
       {children}

@@ -21,6 +21,7 @@ const NewAudit : NextPage = () => {
                 backgroundColor: "#ffffff",
                 boxShadow: "6px 6px 50px 10px #eeeeee",
                 padding: "40px",
+                
               }}
             >
               <Grid.Container css={{height:'100%'}}>
