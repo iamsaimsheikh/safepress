@@ -3,7 +3,7 @@ import { Box } from "./Box";
 import { Navbar } from "@nextui-org/react";
 import Image from 'next/image'
 import Logo from './logo.png'
-import { useRouter } from 'next/router'
+import  useRouter  from 'next/router'
 
 export const Layout = ({ children }: any) => {
   const router = useRouter()
