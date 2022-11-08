@@ -13,10 +13,11 @@ const AuditFindingCard: React.FC<{ findings: any }> = ({ findings }) => {
     <Grid.Container gap={0}>
       <Grid >
         <Collapse.Group css={{ height:'10vh !important'}}>
-          {findings.map((finding: any) => {
+          {findings.map((finding: any, index: number) => {
             // const customSubtitle = `${finding.status}  |  ${finding.location.type}  |  ${finding.location.name}  |  [${finding.location.line_number[0].start}, ${finding.location.line_number[0].end}]`;
             return (
               <Collapse
+              key={index}
                 title={<Text h4>{finding.title}</Text>}
                 subtitle={`customSubtitle`}
                 contentLeft={
