@@ -189,9 +189,10 @@ const AuditInfo: React.FC<{ audit: Audit, auditId : string | string[] }> = ({ au
           <Text h4>Commit hashes</Text>
           <>
             {" "}
-            {audit.commit_hashes.map((ch) => {
+            {audit.commit_hashes.map((ch, key) => {
               return (
                 <Text
+                key={key}
                   css={{
                     flexDirection: "row",
                     display: "flex",

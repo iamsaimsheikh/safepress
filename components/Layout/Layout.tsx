@@ -3,10 +3,9 @@ import { Box } from "./Box";
 import { Navbar } from "@nextui-org/react";
 import Image from 'next/image'
 import Logo from './logo.png'
-import { useRouter } from 'next/router'
+import Router from "next/router";
 
 export const Layout = ({ children }: any) => {
-  const router = useRouter()
   return (
     <Box
       css={{
@@ -15,11 +14,12 @@ export const Layout = ({ children }: any) => {
     >
       <Navbar variant="static" css={{justifyContent:'center'}} >
         <Navbar.Brand>
-        <Image src={Logo} onClick= {() => router.push('/')} style={{transform:'scale(0.5,0.5)', cursor:'pointer'}} />
+        <Image src={Logo} onClick= {() => Router.push('/')} style={{transform:'scale(0.5,0.5)', cursor:'pointer'}} />
         </Navbar.Brand>
-        <Navbar.Content hideIn="xs" css={{paddingRight:'8vw'}}>
-          <Navbar.Link  onClick={() => router.push('audit/new')} href="#">New Audit</Navbar.Link>
-          <Navbar.Link isActive onClick={() => router.push('/')} href="#">Find Audit</Navbar.Link>
+        <Navbar.Content hideIn="xs" css={{marginLeft:'3vw'}}>
+          <Navbar.Link  onClick={() => Router.push('audit/new')} href="#">New Audit</Navbar.Link>
+          <Navbar.Link isActive onClick={() => Router.push('/')} href="#">Audits</Navbar.Link>
+
         </Navbar.Content>
       </Navbar>
       {children}

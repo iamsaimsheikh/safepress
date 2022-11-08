@@ -10,7 +10,7 @@ const Home: NextPage = () => {
       justify="center"
       css={{ height: "89vh", padding: "20px", overflow:'hidden' }}
     >
-      <Row justify="flex-start" align="center" >
+      <Row justify="center" align="center" >
       <Audit />
       </Row>
     </Container>
