@@ -19,6 +19,7 @@ export const Layout = ({ children }: any) => {
         <Navbar.Content hideIn="xs" css={{marginLeft:'3vw'}}>
           <Navbar.Link  onClick={() => Router.push('audit/new')} href="#">New Audit</Navbar.Link>
           <Navbar.Link isActive onClick={() => Router.push('/')} href="#">Audits</Navbar.Link>
+
         </Navbar.Content>
       </Navbar>
       {children}

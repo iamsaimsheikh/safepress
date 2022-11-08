@@ -220,6 +220,7 @@ const AuditInfo: React.FC<{ audit: Audit, auditId : string | string[] }> = ({ au
             flexDirection: "column",
             paddingLeft: "2vw",
             
+            
           }}
         >
           <Grid.Container css={{
@@ -227,6 +228,7 @@ const AuditInfo: React.FC<{ audit: Audit, auditId : string | string[] }> = ({ au
             alignItems: "start",
             justifyContent: "start",
             flexDirection: "row",
+            paddingRight:'30px'
           }}>
           <Text h3 css={{ paddingLeft: "0.1vw" }}>
                 Findings
@@ -237,7 +239,7 @@ const AuditInfo: React.FC<{ audit: Audit, auditId : string | string[] }> = ({ au
                + Add Finding
               </Button>
             </Grid>
-              <Spacer x={16.5}/>
+              <Spacer x={15.2}/>
             <Grid css={{marginTop:'8px'}}>
               <Button size="xs" color="primary" auto>
                 Export As HTML
@@ -253,13 +255,13 @@ const AuditInfo: React.FC<{ audit: Audit, auditId : string | string[] }> = ({ au
           <hr
             style={{
               height: "1px",
-              width: "97%",
+              width: "94%",
               color: "black",
               marginLeft: "0.1vw",
             }}
           />
           <Spacer y={0.5} />
-          <Grid css={{overflowY:'scroll', height:'100%'}}>
+          <Grid css={{overflowY:'scroll', height:'100%', paddingRight:'20px'}}>
           <AuditFindingCard findings={audit.findings} />
           </Grid>
           <FindingModal open={open} setOpen={setOpen} audit={audit} auditId={auditId} />
