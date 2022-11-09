@@ -6,14 +6,27 @@ import {
   Text,
   Button,
 } from "@nextui-org/react";
+import axios from "axios";
 import { useState } from "react";
 import { Audit } from "../../types/types";
 import AuditFindingCard from "./auditFindingCard";
 import FindingModal from "./newFindingModal";
+const download = require('downloadjs')
 
 const AuditInfo: React.FC<{ audit: Audit, auditId : string | string[] }> = ({ audit, auditId }) => {
 
     const [open, setOpen] = useState(false);
+
+    const downloadPDF = async () => {
+      await axios.get(`http://localhost:3000/api/${auditId}`, {
+        responseType:'blob'
+      }
+      ).then((resp) => {
+        download(resp.data,'report',"application/pdf")
+      }).catch(e => {
+        console.log(e)
+      })
+    }
 
   return (
     <Container
@@ -247,7 +260,7 @@ const AuditInfo: React.FC<{ audit: Audit, auditId : string | string[] }> = ({ au
             </Grid>
             <Spacer x={0.5}/>
             <Grid css={{marginTop:'8px'}}>
-              <Button size="xs" color="secondary" auto>
+              <Button size="xs" color="secondary" auto onPress={() => {downloadPDF()}}>
                 Export As PDF
               </Button>
             </Grid>

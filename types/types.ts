@@ -35,10 +35,10 @@ export type Finding = {
   location: {
     type: EFindingLocationType;
     name: string;
-    line_number: {
+    line_number: [{
       start: number;
       end: number;
-    };
+    }];
   };
 };
 

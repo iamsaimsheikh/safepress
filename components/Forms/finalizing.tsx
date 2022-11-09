@@ -15,6 +15,7 @@ import { CommitHashContext } from "../../context/CommitHashContext";
 import { FindingContext } from "../../context/FindingContext";
 import { Audit, CommitHash, Finding } from "../../types/types";
 import axios from 'axios'
+import Router from "next/router";
 
 interface IFormInput {
   version: string;
@@ -33,6 +34,8 @@ const Finalizing: React.FC<{setStage: Dispatch<SetStateAction<string>>}> = ({set
   const { finding } = useContext(FindingContext) as FindingContextType;
   const { scope } = useContext(ScopeContext) as ScopeContextType;
   const { commitHash } = useContext(CommitHashContext) as CommitHashContextType;
+  console.log(finding)
+  console.log('^^ finding')
   const { basicInfo } = useContext(BasicInfoContext) as BasicInfoContextType;
   const { control, handleSubmit } = useForm<IFormInput>();
   const [audit, setAudit] = useState<Audit | undefined>();
@@ -40,13 +43,16 @@ const Finalizing: React.FC<{setStage: Dispatch<SetStateAction<string>>}> = ({set
     let chArr: any = [];
     let fArr: any = [];
 
-    const commitHashArr: any = commitHash?.forEach((ch: CommitHash) => {
-      chArr.push(ch);
-    });
+    // const commitHashArr: any = commitHash!.forEach((ch: CommitHash) => {
+    //   chArr.push(ch);
+    // });
 
-    const findingArr: any = finding?.forEach((f: Finding) => {
-      fArr.push(f);
-    });
+    // const findingArr: any = finding!.forEach((f: Finding) => {
+    //   fArr.push(f);
+    // });
+
+    console.log("Finalizing -----")
+    console.log(finding);
 
     setAudit({
         version: data.version,
@@ -56,11 +62,12 @@ const Finalizing: React.FC<{setStage: Dispatch<SetStateAction<string>>}> = ({set
         end_date: basicInfo?.end_date!,
         type_of_smart_contract: basicInfo?.type_of_smart_contract!,
         scope: scope!,
-        commit_hashes: commitHashArr,
-        findings: findingArr,
+        commit_hashes: commitHash,
+        findings: finding,
       })
 
       addAudit(audit);
+      // Router.push('/');
 
   };
   return (

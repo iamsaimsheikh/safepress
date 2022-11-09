@@ -26,13 +26,13 @@ const CommitHashes: React.FC<{setStage: Dispatch<SetStateAction<string>>}> = ({s
       ...prev,
       { label: label, value: value },
     ]);
-    setLabel("");
-    setValue("");
   };
 
   const { control, handleSubmit } = useForm<IFormInput>();
   const onSubmit: SubmitHandler<IFormInput> = (data) => {
     saveCommitHash(commitHash);
+    console.log(commitHash)
+    console.log('Commit Hashes ------------')
     setStage('Findings')
   };
 

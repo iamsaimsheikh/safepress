@@ -1,8 +1,9 @@
-const puppeteer = require("puppeteer");
+import { Audit } from "../../../types/types";
 import fs from "fs";
 import path from "path";
 
-var CRSR = `<!DOCTYPE html>
+var CRSR = (audit: Audit) => {
+  return `<!DOCTYPE html>
 <html>
   <head>
     <meta charset="utf-8" />
@@ -148,9 +149,14 @@ var CRSR = `<!DOCTYPE html>
   <body>
     <div class="container">
       <header>
-        <img src="data:image/svg+xml;base64,${
-            fs.readFileSync(path.resolve(__dirname, "../../../../pages/api/report/assets/logo.svg")).toString('base64')
-          }" alt="Safepress Logo" />
+        <img src="data:image/svg+xml;base64,${fs
+          .readFileSync(
+            path.resolve(
+              __dirname,
+              "../../../../pages/api/[report]/assets/logo.svg"
+            )
+          )
+          .toString("base64")}" alt="Safepress Logo" />
         <h4>www.safepress.com</h4>
       </header>
       <hr />
@@ -159,9 +165,14 @@ var CRSR = `<!DOCTYPE html>
         <section class="basicInfo">
           <h1>Code Review and security report</h1>
           <div class="infoCard">
-            <img src="data:image/svg+xml;base64,${
-                fs.readFileSync(path.resolve(__dirname, "../../../../pages/api/report/assets/info.svg")).toString('base64')
-              }" height="22" width="22" />
+            <img src="data:image/svg+xml;base64,${fs
+              .readFileSync(
+                path.resolve(
+                  __dirname,
+                  "../../../../pages/api/[report]/assets/info.svg"
+                )
+              )
+              .toString("base64")}" height="22" width="22" />
             <p>
               <b>Important:</b> This document likely contains critical
               information about the Client’s software and hardware systems,
@@ -172,12 +183,12 @@ var CRSR = `<!DOCTYPE html>
           </div>
           <div class="columnSection">
             <div>
-              <p><b>CUSTOMER:</b> XP.NETWORK</p>
-              <p><b>Date:</b> Nov 3, 2022</p>
+              <p><b>CUSTOMER:</b> ${audit.client_name}</p>
+              <p><b>TYPE, SUBTYPE</b> ${audit.type_of_smart_contract}</p>
             </div>
             <div>
-              <p><b>CUSTOMER:</b> XP.NETWORK</p>
-              <p><b>Date:</b> Nov 3, 2022</p>
+              <p><b>Start Date:</b> ${audit.start_date}</p>
+              <p><b>End Date:</b> ${audit.end_date}</p>
             </div>
           </div>
         </section>
@@ -185,12 +196,18 @@ var CRSR = `<!DOCTYPE html>
           <h1>Scope</h1>
           <div class="columnSection">
             <div>
-              <p><b>REPOSITORY:</b>  https://github.com/XP-NETWORK/solana-bridge</p>
-              <p><b>DOCUMENTATION:</b>  No documentation</p>
-              <p><b>TESTS:</b>  Passing</p>
-              <p><b>AUDITORS:</b>  Zain Franci,  Brandon Botosh </p>
-              <p><b>REVIEW & APPROVAL:</b>  Ryan Rhiel Madsen</p>
-              <p><b>SMART CONTRACT AUDITED:</b>  programs / xp_bridge / src / lib.rs</p>
+              <p><b>REPOSITORY:</b>  ${audit.scope.repository_link}}</p>
+              <p><b>DOCUMENTATION:</b>  ${audit.scope.documentation}</p>
+              <p><b>TESTS:</b>  ${audit.scope.tests_status}</p>
+              <p><b>AUDITORS:</b>  ${audit.scope.auditors.map(
+                (auditor) => `${auditor.first_name} ${auditor.last_name},`
+              )} </p>
+              <p><b>REVIEW & APPROVAL:</b>  ${audit.scope.reviewed_by.map(
+                (reviewer) => `${reviewer.first_name} ${reviewer.last_name},`
+              )}</p>
+              <p><b>SMART CONTRACT AUDITED:</b>${
+                audit.scope.smart_contract_audited
+              }</p>
             </div>
           </div>
         </section>
@@ -199,14 +216,15 @@ var CRSR = `<!DOCTYPE html>
             <h1>Commit Hashes</h1>
             <div class="columnSection">
               <div>
-                <p><b>BASE:</b>  d4db409b8e29e080ab349031c7481478e0993af6 (incl.)</p>
-                <p><b>UPDATE 1:</b>  c1e1a9b83f9b039cdae068c4968c35043fc459d8</p>
-                <p><b>UPDATE 2:</b>  a502e8b86617f5669f3cfee0cce61699fd2bd0db</p>
+              ${audit.commit_hashes.map((ch, key) => { return (
+                `<p key=${key}><b>${ch.Label}: </b>${ch.Value}</p>`
+              )})}
               </div>
             </div>
           </section>
     </div>
   </body>
 </html>
-    `
+    `;
+};
 export default CRSR;

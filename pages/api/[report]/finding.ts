@@ -1,8 +1,10 @@
 const puppeteer = require("puppeteer");
 import fs from "fs";
 import path from "path";
+import { Audit } from "../../../types/types";
 
-const individualFinding = `<!DOCTYPE html>
+const finding = (audit: Audit) => {
+  return `<!DOCTYPE html>
 <html>
   <head>
     <meta charset="utf-8" />
@@ -27,7 +29,6 @@ const individualFinding = `<!DOCTYPE html>
         justify-content: flex-start;
         align-items: center;
         flex-direction: column;
-        border: 1px solid black;
         box-sizing: border-box;
         padding-left: 20px;
         padding-right: 20px;
@@ -51,18 +52,15 @@ const individualFinding = `<!DOCTYPE html>
         align-items: flex-start;
         flex-direction: column;
         width: 95%;
+        margin-top: 20px;
       }
 
       .basicInfo h1 {
         font-size: 20px;
       }
 
-      .basicInfo p {
-        font-size: 14px;
-      }
-
       h1 {
-        font-weight: 600;
+        font-weight: 900;
       }
 
       .heading h3 {
@@ -108,7 +106,7 @@ const individualFinding = `<!DOCTYPE html>
         flex-direction: column;
       }
 
-      .classificationSection .graphSection {
+      .classificationSection .graphSection  {
         width: 20%;
         border-left-width: 1px;
         display: flex;
@@ -173,6 +171,7 @@ const individualFinding = `<!DOCTYPE html>
 
       .chart {
         padding: 10px;
+        
       }
 
       .pie-chart {
@@ -203,7 +202,8 @@ const individualFinding = `<!DOCTYPE html>
         height: 80px;
         background-color: #f2f2f2;
         background: conic-gradient(
-          #ce5858 180deg,
+          
+            #ce5858 180deg,
           #ea7c2d 0deg,
           #ce5858 180deg,
           #cea921 0deg,
@@ -213,16 +213,16 @@ const individualFinding = `<!DOCTYPE html>
         );
       }
       [data-chart="5"] .pie-chart--donut:after {
-        width: 53.3333333333px;
-        height: 53.3333333333px;
+        width: 35.3333333333px;
+        height: 35.3333333333px;
       }
       [data-chart="5"] .pie-chart__value {
-        font-size: 13.3333333333px;
+        font-size: 9.3333333333px;
       }
 
       .cardSection {
         width: 95%;
-        padding-top: 10px;
+        padding-top: 30px;
       }
 
       .card {
@@ -236,35 +236,21 @@ const individualFinding = `<!DOCTYPE html>
       }
 
       .card .contract {
-        font-weight: 600;
+        font-weight: 500;
+        font-size: 12px;
         width: 12%;
         padding-left: 20px;
         padding-right: 0px;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        overflow: hidden;
       }
 
-      .card .location {
-        display: flex;
-        justify-content: start;
-        align-items: center;
+      .card .title {
         width: 50%;
-        font-size: 15px;
-        border-left: 2px solid #d9d9d9;
-        padding-left: 10px;
-      }
-
-      .card .location p {
-        padding-left: 12px;
-      }
-
-      .card .location .function {
-        font-family: "Roboto Mono";
-        font-style: normal;
-        font-weight: 600;
-        opacity: 0.6;
-        background-color: #b4b7bd;
-        padding: 5px;
-        margin-left: 5px;
-        border-radius: 5px;
+        font-size: 12px;
+        border-left: 2px solid #D9D9D9;
+        padding-left: 10px; 
       }
 
       .card .classification {
@@ -273,7 +259,7 @@ const individualFinding = `<!DOCTYPE html>
         justify-content: space-evenly;
         width: 13%;
         font-weight: 600;
-        background-color: #eadfb7;
+        background-color: #EADFB7;
         padding: 5px;
         border-radius: 5px;
         font-size: 14px;
@@ -282,7 +268,7 @@ const individualFinding = `<!DOCTYPE html>
       .classificationBall {
         width: 12px;
         height: 12px;
-        background-color: #cea921;
+        background-color: #CEA921;
         border-radius: 50%;
       }
 
@@ -297,82 +283,94 @@ const individualFinding = `<!DOCTYPE html>
         display: flex;
         align-items: center;
         justify-content: space-evenly;
-        background-color: #d7e8e3;
+        background-color: #D7E8E3;
         padding: 5px;
         border-radius: 5px;
         font-size: 14px;
         margin-left: 10px;
       }
+
+
     </style>
     <title>XP Network</title>
   </head>
   <body>
     <div class="container">
       <header>
-        <img src="data:image/svg+xml;base64,${
-            fs.readFileSync(path.resolve(__dirname, "../../../../pages/api/report/assets/logo.svg")).toString('base64')
-          }" />
+        <img src="data:image/svg+xml;base64,${fs
+          .readFileSync(
+            path.resolve(
+              __dirname,
+              "../../../../pages/api/[report]/assets/logo.svg"
+            )
+          )
+          .toString("base64")}" />
         <h4>www.safepress.com</h4>
       </header>
       <hr />
 
       <section class="infoSection">
         <section class="basicInfo">
-          <h1>Findings : <b>XPSOL-01</b></h1>
-          <p>Improper implementation for enforcing uniqueness.</p>
+          <h1>Findings</h1>
         </section>
       </section>
-
-      <section class="cardSection">
-        <div class="card">
-          <div class="contract">XPSOL-01</div>
-          <div class="location">
-            <p>Function</p>
-            <p class="function">create_action</p>
-            <p>Lines 41-42</p>
+      <section class="classificationSection">
+        <div class="graphSection">
+            <div class="chart" data-chart="5">
+              <div class="pie-chart pie-chart--donut"></div>
           </div>
-          <div class="classification">
-            <div class="classificationBall"></div>
-            MEDIUM
+        </div>
+        <div class="columnSection critical">
+          <div>
+            <p><b>0</b> Critical</p>
           </div>
-          <div class="status">
-            <img
-              class="todoIcon"
-              src="data:image/png;base64,${
-                fs.readFileSync(path.resolve(__dirname, "../../../../pages/api/report/assets/todo_icon_fixed.png")).toString('base64')
-              }"
-              alt="fixed"
-            />FIXED
+        </div>
+        <div class="columnSection high">
+          <div>
+            <p><b>1</b> High</p>
+          </div>
+        </div>
+        <div class="columnSection medium">
+          <div>
+            <p><b>0</b> Medium</p>
+          </div>
+        </div>
+        <div class="columnSection low">
+          <div>
+            <p><b>1</b> Low</p>
           </div>
         </div>
       </section>
 
       <section class="infoSection">
         <section class="basicInfo">
-          <h1>Description</h1>
-          <p>
-            There is no need for the function create_action to ensure uniqueness
-            of the . PDA’s created with , seeds and enforce uniqueness.
-          </p>
+          <h1>Summary</h1>
         </section>
       </section>
 
-      <section class="infoSection">
-        <section class="basicInfo">
-          <h1>Recommendation</h1>
-          <p>
-            The implementation using can be changed. The function should be
-            removed since Solana - Anchor will automatically ensure that the is
-            unique. This is because is being used as seed value to calculate the
-            PDA and since PDA’s are deterministically calculated, uniqueness can
-            automatically be enforced.
-          </p>
-        </section>
+      <section class="cardSection">
+      ${audit.findings.map((finding, key) => {
+        return `<div class="card">
+            <div class="contract">${audit.client_name}-0${key + 1}</div>
+            <div class="title">${finding.title}</div>
+            <div class="classification"> <div class="classificationBall"></div> ${
+              finding.classification
+            }</div>
+            <div class="status"><img class="todoIcon" src="data:image/png;base64,${fs
+              .readFileSync(
+                path.resolve(
+                  __dirname,
+                  "../../../../pages/api/[report]/assets/todo_icon_fixed.png"
+                )
+              )
+              .toString("base64")}" alt="fixed" />${finding.status}</div>
+        </div>`;
+      })}
+        
       </section>
-
     </div>
   </body>
 </html>
-`
-
-export default individualFinding
+    `;
+};
+export default finding;

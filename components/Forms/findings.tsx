@@ -1,4 +1,4 @@
-import react, { SetStateAction, useContext, useState, Dispatch } from "react";
+import react, { SetStateAction, useContext, useState, Dispatch, useEffect } from "react";
 import { Grid, Input, StyledInputLabel } from "@nextui-org/react";
 import { useForm, SubmitHandler, Controller } from "react-hook-form";
 import { Container, Row, Text, Spacer } from "@nextui-org/react";
@@ -28,14 +28,38 @@ interface IFormInput {
 }
 
 const Findings: React.FC<{setStage: Dispatch<SetStateAction<string>>}> = ({setStage}) => {
-  const {saveFinding} = useContext(FindingContext) as FindingContextType;
+  const {finding ,saveFinding} = useContext(FindingContext) as FindingContextType;
   const [description, setDescription] = useState("");
   const [recommendation, setRecommendation] = useState("");
   const [findings, setFindings] = useState<Finding[]>([]);
 
+  // const newFinding = (data : any) => {
+  //   setFindings((prev) => [...prev ,{
+  //     title: data.title,
+  //     description: description,
+  //     recommendation: recommendation,
+  //     classification: data.classification,
+  //     status: data.status,
+  //     location: {
+  //       type: data.location.type,
+  //       name: data.location.name,
+  //       line_number: [{
+  //         start: data.location.line_number.start,
+  //         end: data.location.line_number.end,
+  //       }],
+  //     },
+  //   }]);
+
+    
+  // }
+
+  useEffect(() => {
+
+  }, finding)
+
   const { control, handleSubmit, register, reset } = useForm<IFormInput>();
   const onSubmit: SubmitHandler<IFormInput> = (data) => {
-    setFindings((prev) => [...prev ,{
+    saveFinding({
       title: data.title,
       description: description,
       recommendation: recommendation,
@@ -44,16 +68,14 @@ const Findings: React.FC<{setStage: Dispatch<SetStateAction<string>>}> = ({setSt
       location: {
         type: data.location.type,
         name: data.location.name,
-        line_number: {
+        line_number: [{
           start: data.location.line_number.start,
           end: data.location.line_number.end,
-        },
-      },
-    }]);
+        }]}});
+
     setDescription('');
     setRecommendation('');
     reset();
-    saveFinding(findings);
   };
 
   return (
@@ -255,7 +277,7 @@ const Findings: React.FC<{setStage: Dispatch<SetStateAction<string>>}> = ({setSt
                 paddingRight: "1vw",
               }}
             >
-              <Button size="xs" type="submit">
+              <Button size="xs" type="submit" >
                 Add Finding
               </Button>
             </Grid>

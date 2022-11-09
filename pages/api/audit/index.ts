@@ -32,7 +32,7 @@ const auditHandler = async (req: NextApiRequest, res: NextApiResponse) => {
   if (request.method == "POST") {
     try {
       const newAudit = await collection
-        .insertOne(JSON.parse(data))
+        .insertOne(data)
         .then(() => {
           res.status(200).json(data);
         })

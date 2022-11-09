@@ -27,7 +27,6 @@ const disclaimer = `<!DOCTYPE html>
         justify-content: flex-start;
         align-items: center;
         flex-direction: column;
-        border: 1px solid black;
         box-sizing: border-box;
         padding-left: 20px;
         padding-right: 20px;
@@ -72,7 +71,7 @@ const disclaimer = `<!DOCTYPE html>
     <div class="container">
       <header>
         <img src="data:image/svg+xml;base64,${
-            fs.readFileSync(path.resolve(__dirname, "../../../../pages/api/report/assets/logo.svg")).toString('base64')
+            fs.readFileSync(path.resolve(__dirname, "../../../../pages/api/[report]/assets/logo.svg")).toString('base64')
           }" />
         <h4>www.safepress.com</h4>
       </header>
@@ -121,3 +120,5 @@ const disclaimer = `<!DOCTYPE html>
   </body>
 </html>
 `
+
+export default disclaimer;

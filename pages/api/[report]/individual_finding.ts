@@ -1,9 +1,11 @@
 const puppeteer = require("puppeteer");
 import fs from "fs";
 import path from "path";
+import { Audit } from "../../../types/types";
+import finding from "./finding";
 
-
-var finding = `<!DOCTYPE html>
+const individualFinding = (audit: Audit) => {
+  return `<!DOCTYPE html>
 <html>
   <head>
     <meta charset="utf-8" />
@@ -28,7 +30,6 @@ var finding = `<!DOCTYPE html>
         justify-content: flex-start;
         align-items: center;
         flex-direction: column;
-        border: 1px solid black;
         box-sizing: border-box;
         padding-left: 20px;
         padding-right: 20px;
@@ -52,15 +53,18 @@ var finding = `<!DOCTYPE html>
         align-items: flex-start;
         flex-direction: column;
         width: 95%;
-        margin-top: 20px;
       }
 
       .basicInfo h1 {
         font-size: 20px;
       }
 
+      .basicInfo p {
+        font-size: 14px;
+      }
+
       h1 {
-        font-weight: 900;
+        font-weight: 600;
       }
 
       .heading h3 {
@@ -106,7 +110,7 @@ var finding = `<!DOCTYPE html>
         flex-direction: column;
       }
 
-      .classificationSection .graphSection  {
+      .classificationSection .graphSection {
         width: 20%;
         border-left-width: 1px;
         display: flex;
@@ -171,7 +175,6 @@ var finding = `<!DOCTYPE html>
 
       .chart {
         padding: 10px;
-        
       }
 
       .pie-chart {
@@ -202,8 +205,7 @@ var finding = `<!DOCTYPE html>
         height: 80px;
         background-color: #f2f2f2;
         background: conic-gradient(
-          
-            #ce5858 180deg,
+          #ce5858 180deg,
           #ea7c2d 0deg,
           #ce5858 180deg,
           #cea921 0deg,
@@ -222,7 +224,7 @@ var finding = `<!DOCTYPE html>
 
       .cardSection {
         width: 95%;
-        padding-top: 30px;
+        padding-top: 10px;
       }
 
       .card {
@@ -236,17 +238,35 @@ var finding = `<!DOCTYPE html>
       }
 
       .card .contract {
-        font-weight: 600;
-        width: 12%;
+        font-weight: 400;
+        width: 8%;
         padding-left: 20px;
         padding-right: 0px;
       }
 
-      .card .title {
+      .card .location {
+        display: flex;
+        justify-content: start;
+        align-items: center;
         width: 50%;
-        font-size: 12px;
-        border-left: 2px solid #D9D9D9;
+        font-size: 15px;
         padding-left: 10px;
+      }
+
+      .card .location p {
+        padding-left: 12px;
+        font-size:12px;
+      }
+
+      .card .location .function {
+        font-family: "Roboto Mono";
+        font-style: normal;
+        font-weight: 600;
+        opacity: 0.6;
+        background-color: #b4b7bd;
+        padding: 5px;
+        margin-left: 5px;
+        border-radius: 5px;
       }
 
       .card .classification {
@@ -255,7 +275,7 @@ var finding = `<!DOCTYPE html>
         justify-content: space-evenly;
         width: 13%;
         font-weight: 600;
-        background-color: #EADFB7;
+        background-color: #eadfb7;
         padding: 5px;
         border-radius: 5px;
         font-size: 14px;
@@ -264,7 +284,7 @@ var finding = `<!DOCTYPE html>
       .classificationBall {
         width: 12px;
         height: 12px;
-        background-color: #CEA921;
+        background-color: #cea921;
         border-radius: 50%;
       }
 
@@ -279,78 +299,95 @@ var finding = `<!DOCTYPE html>
         display: flex;
         align-items: center;
         justify-content: space-evenly;
-        background-color: #D7E8E3;
+        background-color: #d7e8e3;
         padding: 5px;
         border-radius: 5px;
         font-size: 14px;
         margin-left: 10px;
       }
-
-
     </style>
     <title>XP Network</title>
   </head>
-  <body>
+  ${audit.findings.map((finding, key) => {
+    return `
+    <body>
     <div class="container">
       <header>
-        <img src="data:image/svg+xml;base64,${
-            fs.readFileSync(path.resolve(__dirname, "../../../../pages/api/report/assets/logo.svg")).toString('base64')
-          }" />
+        <img src="data:image/svg+xml;base64,${fs
+          .readFileSync(
+            path.resolve(
+              __dirname,
+              "../../../../pages/api/[report]/assets/logo.svg"
+            )
+          )
+          .toString("base64")}" />
         <h4>www.safepress.com</h4>
       </header>
       <hr />
 
       <section class="infoSection">
         <section class="basicInfo">
-          <h1>Findings</h1>
+          <h1>Findings : <b>${audit.client_name}-0${key+1}</b></h1>
+          <p>${finding.title}</p>
         </section>
       </section>
-      <section class="classificationSection">
-        <div class="graphSection">
-            <div class="chart" data-chart="5">
-              <div class="pie-chart pie-chart--donut"></div>
+
+      <section class="cardSection">
+        <div class="card">
+          <div class="contract">${audit.commit_hashes[key].Label}</div>
+          |
+          <div class="location">
+            <p>${finding.location.type}</p>
+            <p class="function">${finding.location.name}</p>
+            <p>Lines ${finding.location.line_number[0].start}-${
+      finding.location.line_number[0].end
+    }</p>
           </div>
-        </div>
-        <div class="columnSection critical">
-          <div>
-            <p><b>0</b> Critical</p>
+          <div class="classification">
+            <div class="classificationBall"></div>
+            ${finding.classification}
           </div>
-        </div>
-        <div class="columnSection high">
-          <div>
-            <p><b>1</b> High</p>
-          </div>
-        </div>
-        <div class="columnSection medium">
-          <div>
-            <p><b>0</b> Medium</p>
-          </div>
-        </div>
-        <div class="columnSection low">
-          <div>
-            <p><b>1</b> Low</p>
+          <div class="status">
+            <img
+              class="todoIcon"
+              src="data:image/png;base64,${fs
+                .readFileSync(
+                  path.resolve(
+                    __dirname,
+                    "../../../../pages/api/[report]/assets/todo_icon_fixed.png"
+                  )
+                )
+                .toString("base64")}"
+              alt="fixed"
+            />${finding.status}
           </div>
         </div>
       </section>
 
       <section class="infoSection">
         <section class="basicInfo">
-          <h1>Findings</h1>
+          <h1>Description</h1>
+          <p>
+            ${finding.description}
+          </p>
         </section>
       </section>
 
-      <section class="cardSection">
-        <div class="card">
-            <div class="contract">XPSOL-01</div>
-            <div class="title">Improper implementation for enforcing uniqueness</div>
-            <div class="classification"> <div class="classificationBall"></div> MEDIUM</div>
-            <div class="status"><img class="todoIcon" src="data:image/png;base64,${
-                fs.readFileSync(path.resolve(__dirname, "../../../../pages/api/report/assets/todo_icon_fixed.png")).toString('base64')
-              }" alt="fixed" />FIXED</div>
-        </div>
+      <section class="infoSection">
+        <section class="basicInfo">
+          <h1>Recommendation</h1>
+          <p>
+            ${finding.recommendation}
+          </p>
+        </section>
       </section>
+
     </div>
-  </body>
+  </body>`;
+  })}
+  
 </html>
-    `
-export default finding;
+`;
+};
+
+export default individualFinding;

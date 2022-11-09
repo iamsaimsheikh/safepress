@@ -1,8 +1,9 @@
-const puppeteer = require("puppeteer");
+import { Audit } from "../../../types/types";
 import fs from "fs";
 import path from "path";
 
-var cover = `<!DOCTYPE html>
+const cover = (audit: Audit) => {
+  return `<!DOCTYPE html>
     <html>
       <head>
         <meta charset="utf-8" />
@@ -82,17 +83,32 @@ var cover = `<!DOCTYPE html>
       <body>
         <div class="container">
           <section class="logoSection">
-            <img src="data:image/svg+xml;base64,${
-                fs.readFileSync(path.resolve(__dirname, "../../../../pages/api/report/assets/logo.svg")).toString('base64')
-              }" alt="Safepress Logo" />
+            <img src="data:image/svg+xml;base64,${fs
+              .readFileSync(
+                path.resolve(
+                  __dirname,
+                  "../../../../pages/api/[report]/assets/logo.svg"
+                )
+              )
+              .toString("base64")}" alt="Safepress Logo" />
           </section>
           <section class="vectorSection">
-            <img src="data:image/png;base64,${
-                fs.readFileSync(path.resolve(__dirname, "../../../../pages/api/report/assets/vLeft.png")).toString('base64')
-              }" alt="vector"  />
-            <img class="vectorRight" src="data:image/png;base64,${
-                fs.readFileSync(path.resolve(__dirname, "../../../../pages/api/report/assets/vRight.png")).toString('base64')
-              }" alt="vector" />
+            <img src="data:image/png;base64,${fs
+              .readFileSync(
+                path.resolve(
+                  __dirname,
+                  "../../../../pages/api/[report]/assets/vLeft.png"
+                )
+              )
+              .toString("base64")}" alt="vector"  />
+            <img class="vectorRight" src="data:image/png;base64,${fs
+              .readFileSync(
+                path.resolve(
+                  __dirname,
+                  "../../../../pages/api/[report]/assets/vRight.png"
+                )
+              )
+              .toString("base64")}" alt="vector" />
           </section>
           <section class="heading">
             <h1>Smart Contract Audit</h1>
@@ -100,11 +116,12 @@ var cover = `<!DOCTYPE html>
           </section>
     
           <footer>
-            <h4><b>CUSTOMER:</b> XP.NETWORK</h4>
-            <h4><b>Date:</b> Nov 3, 2022</h4>
+            <h4><b>CUSTOMER:</b> ${audit.client_name}</h4>
+            <h4><b>Date:</b> Nov ${audit.start_date}</h4>
           </footer>
         </div>
       </body>
     </html>
-    `
+    `;
+};
 export default cover;

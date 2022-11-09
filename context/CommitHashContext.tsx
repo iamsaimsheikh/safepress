@@ -14,7 +14,6 @@ const CommitHashProvider: React.FC<Props> = ({ children }) => {
   const [commitHash, setCommitHash] = React.useState<CommitHashType[] | undefined>();
   const saveCommitHash = (commitHash: CommitHashType[]) => {
     setCommitHash(commitHash);
-    console.log(commitHash);
   };
   return (
     <CommitHashContext.Provider value={{ commitHash, saveCommitHash }}>

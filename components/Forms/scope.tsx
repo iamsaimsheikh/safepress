@@ -138,7 +138,7 @@ const Scope: React.FC<{setStage: Dispatch<SetStateAction<string>>}> = ({setStage
                 control={control}
                 render={({ field }) => (
                   <Input
-                    required
+                    
                     label="First Name"
                     onChange={(e) => setAuditorFirstName(e.target.value)}
                     value={auditorFirstName}
@@ -187,7 +187,7 @@ const Scope: React.FC<{setStage: Dispatch<SetStateAction<string>>}> = ({setStage
                 control={control}
                 render={({ field }) => (
                   <Input
-                    required
+                  
                     label="First Name"
                     onChange={(e) => setReviewerFirstName(e.target.value)}
                     value={reviewerFirstName}
