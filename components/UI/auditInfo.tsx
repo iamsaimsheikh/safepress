@@ -24,7 +24,8 @@ const AuditInfo: React.FC<{ audit: Audit, auditId : string | string[] }> = ({ au
       ).then((resp) => {
         download(resp.data,'report',"application/pdf")
       }).catch(e => {
-        console.log(e)
+        console.log("error here")
+        console.error(e.response.data);
       })
     }
 
