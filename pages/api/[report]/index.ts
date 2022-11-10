@@ -18,6 +18,8 @@ var merger = new PDFMerger();
 
 const generatePDF = async (req: NextApiRequest, res: NextApiResponse) => {
 
+  console.log("error cors")
+
   await NextCors(req, res, {
     // Options
     methods: ['GET', 'HEAD', 'PUT', 'PATCH', 'POST', 'DELETE'],
@@ -33,6 +35,7 @@ const generatePDF = async (req: NextApiRequest, res: NextApiResponse) => {
   };
 
   //Create MongoDB Connection
+  console.log("error mongo")
   const client = await MongoClient.connect(`mongodb+srv://admin:mypassword@nextmeetup.iag8fbb.mongodb.net/?retryWrites=true&w=majority`,{ useNewUrlParser: true });
   const db = client.db("safepress_db");
   const collection = db.collection("Audit");
@@ -40,6 +43,7 @@ const generatePDF = async (req: NextApiRequest, res: NextApiResponse) => {
 
   // GET
   if (request.method == "GET") {
+    console.log("error get")
     try {
       const findById = await collection.findOne({ _id: ObjectId(aid.report) });
       if (findById) {
@@ -55,6 +59,7 @@ const generatePDF = async (req: NextApiRequest, res: NextApiResponse) => {
 
         try {
           // Create a browser instance
+          console.log("error browser")
           const browser = await puppeteer.launch({
             args: [
               "--allow-file-access-from-files",
@@ -70,6 +75,7 @@ const generatePDF = async (req: NextApiRequest, res: NextApiResponse) => {
           let index = 0;
 
           for (let x of fileArray) {
+            console.log("error fileArray")
             await page.setContent(x, { waitUntil: "domcontentloaded" });
 
             await page.emulateMediaType("screen");
@@ -121,12 +127,12 @@ const generatePDF = async (req: NextApiRequest, res: NextApiResponse) => {
 
           res.status(200).send(mergedPdf);
         } catch (e: any) {
-          console.log(e);
+          console.error(e.response.data);
           res.status(404).send("Could not generate report!");
         } finally {
           fs.readdir("./pdf_report/", (err, files) => {
             if (err) throw err;
-            
+            console.log(err!)
             for (const file of files) {
                 console.log(file + ' : File Deleted Successfully.');
                 fs.unlinkSync("./pdf_report/"+file);
