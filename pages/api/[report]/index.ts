@@ -114,6 +114,16 @@ const generatePDF = async (req: NextApiRequest, res: NextApiResponse) => {
         } catch (e: any) {
           console.log(e);
           res.status(404).send("Could not generate report!");
+        } finally {
+          fs.readdir("./pdf_report/", (err, files) => {
+            if (err) throw err;
+            
+            for (const file of files) {
+                console.log(file + ' : File Deleted Successfully.');
+                fs.unlinkSync("./pdf_report/"+file);
+            }
+            
+          });
         }
       }
     } catch (e) {
