@@ -8,7 +8,7 @@ import finding from "./finding";
 import individualFinding from "./individual_finding";
 import executive_summary from "./executive_summary";
 import disclaimer from "./disclaimer";
-import { Audit } from "../../../types/types";
+import NextCors from 'nextjs-cors';
 
 const puppeteer = require("puppeteer");
 const PDFMerger = require("pdf-merger-js");
@@ -17,6 +17,15 @@ const MongoClient = require("mongodb").MongoClient;
 var merger = new PDFMerger();
 
 const generatePDF = async (req: NextApiRequest, res: NextApiResponse) => {
+
+  await NextCors(req, res, {
+    // Options
+    methods: ['GET', 'HEAD', 'PUT', 'PATCH', 'POST', 'DELETE'],
+    origin: '*',
+    optionsSuccessStatus: 200, // some legacy browsers (IE11, various SmartTVs) choke on 204
+ });
+
+
   const aid = req.query;
 
   const request = {
