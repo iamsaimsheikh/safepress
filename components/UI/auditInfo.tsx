@@ -18,7 +18,7 @@ const AuditInfo: React.FC<{ audit: Audit, auditId : string | string[] }> = ({ au
     const [open, setOpen] = useState(false);
 
     const downloadPDF = async () => {
-      await axios.get(`http://localhost:3000/api/${auditId}`, {
+      await axios.get(`/api/${auditId}`, {
         responseType:'blob'
       }
       ).then((resp) => {
