@@ -5,7 +5,7 @@ const MongoClient = require("mongodb").MongoClient;
 const auditHandler = async (req: NextApiRequest, res: NextApiResponse) => {
 
   //Create MongoDB Connection
-  const client = await MongoClient.connect(`mongodb://127.0.0.1:27017`);
+  const client = await MongoClient.connect(`mongodb+srv://admin:mypassword@nextmeetup.iag8fbb.mongodb.net/?retryWrites=true&w=majority`,{ useNewUrlParser: true });
   const db = client.db("safepress_db");
   const collection = db.collection("Audit");
   const ObjectId = require("mongodb").ObjectId;
