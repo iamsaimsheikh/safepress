@@ -1,4 +1,3 @@
-import mongoose from "mongoose";
 import type { NextApiRequest, NextApiResponse } from "next";
 import { Audit } from "../../../../types/types";
 const MongoClient = require("mongodb").MongoClient;
@@ -21,13 +20,7 @@ const auditHandler = async (req: NextApiRequest, res: NextApiResponse) => {
   const data: object = request.data;
   const auditObj : Audit = request.data;
 
-
-  // Audit Controller
-
-  // 1:
-  // Method = GET
-  // Params = (id : string)
-  // Functionality = Get One By Id
+  // GET
   if (request.method == "GET") {
     try {
       const findById = await collection.findOne({ _id: ObjectId(_id) });
@@ -37,10 +30,7 @@ const auditHandler = async (req: NextApiRequest, res: NextApiResponse) => {
     }
   }
 
-  // 2:
-  // Method = PATCH
-  // Params = (id : string)
-  // Functionality = Patch One By Id
+  // UPDATE
   if (request.method == "PATCH") {
     try {
       console.log(data)
@@ -56,10 +46,7 @@ const auditHandler = async (req: NextApiRequest, res: NextApiResponse) => {
     }
   }
 
-  // 3:
-  // Method = DELETE
-  // Params = (id : string)
-  // Functionality = Delete One By Id
+  // DELETE
   if (request.method == "DELETE" && _id ) {
     try {
       const deleteById = await collection.deletetOne({ _id: ObjectId(_id) });

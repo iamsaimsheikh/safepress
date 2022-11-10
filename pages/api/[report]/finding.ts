@@ -1,9 +1,10 @@
 const puppeteer = require("puppeteer");
 import fs from "fs";
 import path from "path";
+import { Audit } from "../../../types/types";
 
-
-var finding = `<!DOCTYPE html>
+const finding = (audit: Audit) => {
+  return `<!DOCTYPE html>
 <html>
   <head>
     <meta charset="utf-8" />
@@ -28,7 +29,6 @@ var finding = `<!DOCTYPE html>
         justify-content: flex-start;
         align-items: center;
         flex-direction: column;
-        border: 1px solid black;
         box-sizing: border-box;
         padding-left: 20px;
         padding-right: 20px;
@@ -213,11 +213,11 @@ var finding = `<!DOCTYPE html>
         );
       }
       [data-chart="5"] .pie-chart--donut:after {
-        width: 53.3333333333px;
-        height: 53.3333333333px;
+        width: 35.3333333333px;
+        height: 35.3333333333px;
       }
       [data-chart="5"] .pie-chart__value {
-        font-size: 13.3333333333px;
+        font-size: 9.3333333333px;
       }
 
       .cardSection {
@@ -236,17 +236,21 @@ var finding = `<!DOCTYPE html>
       }
 
       .card .contract {
-        font-weight: 600;
+        font-weight: 500;
+        font-size: 12px;
         width: 12%;
         padding-left: 20px;
         padding-right: 0px;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        overflow: hidden;
       }
 
       .card .title {
         width: 50%;
         font-size: 12px;
         border-left: 2px solid #D9D9D9;
-        padding-left: 10px;
+        padding-left: 10px; 
       }
 
       .card .classification {
@@ -293,9 +297,14 @@ var finding = `<!DOCTYPE html>
   <body>
     <div class="container">
       <header>
-        <img src="data:image/svg+xml;base64,${
-            fs.readFileSync(path.resolve(__dirname, "../../../../pages/api/report/assets/logo.svg")).toString('base64')
-          }" />
+        <img src="data:image/svg+xml;base64,${fs
+          .readFileSync(
+            path.resolve(
+              __dirname,
+              "../../../../pages/api/[report]/assets/logo.svg"
+            )
+          )
+          .toString("base64")}" />
         <h4>www.safepress.com</h4>
       </header>
       <hr />
@@ -335,22 +344,33 @@ var finding = `<!DOCTYPE html>
 
       <section class="infoSection">
         <section class="basicInfo">
-          <h1>Findings</h1>
+          <h1>Summary</h1>
         </section>
       </section>
 
       <section class="cardSection">
-        <div class="card">
-            <div class="contract">XPSOL-01</div>
-            <div class="title">Improper implementation for enforcing uniqueness</div>
-            <div class="classification"> <div class="classificationBall"></div> MEDIUM</div>
-            <div class="status"><img class="todoIcon" src="data:image/png;base64,${
-                fs.readFileSync(path.resolve(__dirname, "../../../../pages/api/report/assets/todo_icon_fixed.png")).toString('base64')
-              }" alt="fixed" />FIXED</div>
-        </div>
+      ${audit.findings.map((finding, key) => {
+        return `<div class="card">
+            <div class="contract">${audit.client_name}-0${key + 1}</div>
+            <div class="title">${finding.title}</div>
+            <div class="classification"> <div class="classificationBall"></div> ${
+              finding.classification
+            }</div>
+            <div class="status"><img class="todoIcon" src="data:image/png;base64,${fs
+              .readFileSync(
+                path.resolve(
+                  __dirname,
+                  "../../../../pages/api/[report]/assets/todo_icon_fixed.png"
+                )
+              )
+              .toString("base64")}" alt="fixed" />${finding.status}</div>
+        </div>`;
+      })}
+        
       </section>
     </div>
   </body>
 </html>
-    `
+    `;
+};
 export default finding;

@@ -1,8 +1,11 @@
 const puppeteer = require("puppeteer");
 import fs from "fs";
 import path from "path";
+import { Audit } from "../../../types/types";
+import finding from "./finding";
 
-const individualFinding = `<!DOCTYPE html>
+const individualFinding = (audit: Audit) => {
+  return `<!DOCTYPE html>
 <html>
   <head>
     <meta charset="utf-8" />
@@ -27,7 +30,6 @@ const individualFinding = `<!DOCTYPE html>
         justify-content: flex-start;
         align-items: center;
         flex-direction: column;
-        border: 1px solid black;
         box-sizing: border-box;
         padding-left: 20px;
         padding-right: 20px;
@@ -236,8 +238,8 @@ const individualFinding = `<!DOCTYPE html>
       }
 
       .card .contract {
-        font-weight: 600;
-        width: 12%;
+        font-weight: 400;
+        width: 8%;
         padding-left: 20px;
         padding-right: 0px;
       }
@@ -248,12 +250,12 @@ const individualFinding = `<!DOCTYPE html>
         align-items: center;
         width: 50%;
         font-size: 15px;
-        border-left: 2px solid #d9d9d9;
         padding-left: 10px;
       }
 
       .card .location p {
         padding-left: 12px;
+        font-size:12px;
       }
 
       .card .location .function {
@@ -306,43 +308,58 @@ const individualFinding = `<!DOCTYPE html>
     </style>
     <title>XP Network</title>
   </head>
-  <body>
+  ${audit.findings.map((finding, key) => {
+    return `
+    <body>
     <div class="container">
       <header>
-        <img src="data:image/svg+xml;base64,${
-            fs.readFileSync(path.resolve(__dirname, "../../../../pages/api/report/assets/logo.svg")).toString('base64')
-          }" />
+        <img src="data:image/svg+xml;base64,${fs
+          .readFileSync(
+            path.resolve(
+              __dirname,
+              "../../../../pages/api/[report]/assets/logo.svg"
+            )
+          )
+          .toString("base64")}" />
         <h4>www.safepress.com</h4>
       </header>
       <hr />
 
       <section class="infoSection">
         <section class="basicInfo">
-          <h1>Findings : <b>XPSOL-01</b></h1>
-          <p>Improper implementation for enforcing uniqueness.</p>
+          <h1>Findings : <b>${audit.client_name}-0${key+1}</b></h1>
+          <p>${finding.title}</p>
         </section>
       </section>
 
       <section class="cardSection">
         <div class="card">
-          <div class="contract">XPSOL-01</div>
+          <div class="contract">${audit.commit_hashes[key].label}</div>
+          |
           <div class="location">
-            <p>Function</p>
-            <p class="function">create_action</p>
-            <p>Lines 41-42</p>
+            <p>${finding.location.type}</p>
+            <p class="function">${finding.location.name}</p>
+            <p>Lines ${finding.location.line_number[0].start}-${
+      finding.location.line_number[0].end
+    }</p>
           </div>
           <div class="classification">
             <div class="classificationBall"></div>
-            MEDIUM
+            ${finding.classification}
           </div>
           <div class="status">
             <img
               class="todoIcon"
-              src="data:image/png;base64,${
-                fs.readFileSync(path.resolve(__dirname, "../../../../pages/api/report/assets/todo_icon_fixed.png")).toString('base64')
-              }"
+              src="data:image/png;base64,${fs
+                .readFileSync(
+                  path.resolve(
+                    __dirname,
+                    "../../../../pages/api/[report]/assets/todo_icon_fixed.png"
+                  )
+                )
+                .toString("base64")}"
               alt="fixed"
-            />FIXED
+            />${finding.status}
           </div>
         </div>
       </section>
@@ -351,8 +368,7 @@ const individualFinding = `<!DOCTYPE html>
         <section class="basicInfo">
           <h1>Description</h1>
           <p>
-            There is no need for the function create_action to ensure uniqueness
-            of the . PDA’s created with , seeds and enforce uniqueness.
+            ${finding.description}
           </p>
         </section>
       </section>
@@ -361,18 +377,17 @@ const individualFinding = `<!DOCTYPE html>
         <section class="basicInfo">
           <h1>Recommendation</h1>
           <p>
-            The implementation using can be changed. The function should be
-            removed since Solana - Anchor will automatically ensure that the is
-            unique. This is because is being used as seed value to calculate the
-            PDA and since PDA’s are deterministically calculated, uniqueness can
-            automatically be enforced.
+            ${finding.recommendation}
           </p>
         </section>
       </section>
 
     </div>
-  </body>
+  </body>`;
+  })}
+  
 </html>
-`
+`;
+};
 
-export default individualFinding
+export default individualFinding;

@@ -14,7 +14,6 @@ const FindingProvider: React.FC<Props> = ({ children }) => {
   const [finding, setFinding] = React.useState<FindingType[] | undefined>();
   const saveFinding = (finding: FindingType[]) => {
     setFinding(finding);
-    console.log(finding);
   };
   return (
     <FindingContext.Provider value={{ finding, saveFinding }}>

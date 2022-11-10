@@ -12,7 +12,7 @@ const AuditorSchema = new Schema(
     },
   },
   {
-    _id: true,
+    _id: false,
   },
 );
 
