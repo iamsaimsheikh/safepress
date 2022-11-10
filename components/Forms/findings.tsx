@@ -10,8 +10,8 @@ import {
 } from "../../types/audit.enum";
 import WWEditor from "./wizywyg";
 import { Finding } from "../../types/types";
-import {FindingContextType} from "../../types/context.types";
-import {FindingContext} from "../../context/FindingContext";
+import { FindingContextType } from "../../types/context.types";
+import { FindingContext } from "../../context/FindingContext";
 
 interface IFormInput {
   title: string;
@@ -20,53 +20,58 @@ interface IFormInput {
   location: {
     type: EFindingLocationType;
     name: string;
-    line_number: {
-      start: number;
-      end: number;
-    };
+    start: number;
+    end: number;
   };
 }
 
-const Findings: React.FC<{setStage: Dispatch<SetStateAction<string>>}> = ({setStage}) => {
-  const {saveFinding} = useContext(FindingContext) as FindingContextType;
+const Findings: React.FC<{ setStage: Dispatch<SetStateAction<string>> }> = ({
+  setStage,
+}) => {
+  const { saveFinding } = useContext(FindingContext) as FindingContextType;
   const [description, setDescription] = useState("");
   const [recommendation, setRecommendation] = useState("");
-  const [title, setTitle] =  useState("");
+  const [title, setTitle] = useState("");
   const [classification, setClassification] = useState("");
-  const [status, setStatus] =  useState("");
-  const [type, setType] =  useState("");
-  const [name, setName] =  useState("");
-  const [lineStart, setLineStart]= useState<number>(0);
-  const [lineEnd, setLineEnd] =  useState<number>(0);
+  const [status, setStatus] = useState("");
+  const [type, setType] = useState("");
+  const [name, setName] = useState("");
+  const [lineStart, setLineStart] = useState<number>(0);
+  const [lineEnd, setLineEnd] = useState<number>(0);
   const [findings, setFindings] = useState<any>([]);
 
   const newFinding = () => {
-    setFindings((prev : any) => [...prev ,{
-      title: title,
-      description: description,
-      recommendation: recommendation,
-      classification: classification,
-      status: status,
-      location: {
-        type: type,
-        name: name,
-        line_number: [{
-          start: lineStart,
-          end: lineEnd,
-        }],
+    setFindings((prev: any) => [
+      ...prev,
+      {
+        title: title,
+        description: description,
+        recommendation: recommendation,
+        classification: classification,
+        status: status,
+        location: {
+          type: type,
+          name: name,
+          line_number: [
+            {
+              start: lineStart,
+              end: lineEnd,
+            },
+          ],
+        },
       },
-    }]);
+    ]);
 
-    setDescription('');
-    setRecommendation('');
-    saveFinding(findings)
+    setDescription("");
+    setRecommendation("");
+    saveFinding(findings);
     reset();
-  }
+  };
 
   const { control, handleSubmit, reset } = useForm<IFormInput>();
   const onSubmit: SubmitHandler<IFormInput> = (data) => {
-    saveFinding(findings)
-    setStage('Finalizing');
+    saveFinding(findings);
+    setStage("Finalizing");
   };
 
   return (
@@ -95,7 +100,11 @@ const Findings: React.FC<{setStage: Dispatch<SetStateAction<string>>}> = ({setSt
                 name="title"
                 control={control}
                 render={({ field }) => (
-                  <Input required label="Title" onChange={e => setTitle(e.target.value)} />
+                  <Input
+                    required
+                    label="Title"
+                    onChange={(e) => setTitle(e.target.value)}
+                  />
                 )}
               />
             </Grid>
@@ -144,7 +153,7 @@ const Findings: React.FC<{setStage: Dispatch<SetStateAction<string>>}> = ({setSt
                   height: "5.5vh",
                   padding: "10px",
                 }}
-                onChange={e => setClassification(e.target.value)}
+                onChange={(e) => setClassification(e.target.value)}
               >
                 <option value="CRITICAL">CRITICAL</option>
                 <option value="HIGH">HIGH</option>
@@ -177,7 +186,7 @@ const Findings: React.FC<{setStage: Dispatch<SetStateAction<string>>}> = ({setSt
                   height: "5.5vh",
                   padding: "10px",
                 }}
-                onChange={e => setStatus(e.target.value)}
+                onChange={(e) => setStatus(e.target.value)}
               >
                 <option value="CRITICAL">FIXED</option>
                 <option value="HIGH">TODO</option>
@@ -204,7 +213,7 @@ const Findings: React.FC<{setStage: Dispatch<SetStateAction<string>>}> = ({setSt
                   height: "5.5vh",
                   padding: "10px",
                 }}
-                onChange = {e => setType(e.target.value)}
+                onChange={(e) => setType(e.target.value)}
               >
                 <option value="" disabled selected hidden>
                   Type
@@ -221,7 +230,11 @@ const Findings: React.FC<{setStage: Dispatch<SetStateAction<string>>}> = ({setSt
                 name="location.name"
                 control={control}
                 render={({ field }) => (
-                  <Input required placeholder="Name" onChange={e => setName(e.target.value)} />
+                  <Input
+                    required
+                    placeholder="Name"
+                    onChange={(e) => setName(e.target.value)}
+                  />
                 )}
               />
             </Grid>
@@ -234,20 +247,30 @@ const Findings: React.FC<{setStage: Dispatch<SetStateAction<string>>}> = ({setSt
           <Grid.Container css={{ width: "100%" }}>
             <Grid>
               <Controller
-                name="location.line_number.start"
+                name="location.start"
                 control={control}
                 render={({ field }) => (
-                  <Input required placeholder="Start" type='number' onChange={e => setLineStart(e.target.value)} />
+                  <Input
+                    required
+                    placeholder="Start"
+                    type="number"
+                    onChange={(e) => setLineStart(Number(e.target.value))}
+                  />
                 )}
               />
             </Grid>
             <Spacer x={1} />
             <Grid>
               <Controller
-                name="location.line_number.end"
+                name="location.end"
                 control={control}
                 render={({ field }) => (
-                  <Input required placeholder="End" type='number' onChange={e => setLineEnd(e.target.value)}  />
+                  <Input
+                    required
+                    placeholder="End"
+                    type="number"
+                    onChange={(e) => setLineEnd(Number(e.target.value))}
+                  />
                 )}
               />
             </Grid>
@@ -268,7 +291,7 @@ const Findings: React.FC<{setStage: Dispatch<SetStateAction<string>>}> = ({setSt
                 paddingRight: "1vw",
               }}
             >
-              <Button size="xs" onClick={newFinding} >
+              <Button size="xs" onClick={newFinding}>
                 Add Finding
               </Button>
             </Grid>
