@@ -20,29 +20,32 @@ interface IFormInput {
   location: {
     type: EFindingLocationType;
     name: string;
-    line_number: {
-      start: number;
-      end: number;
-    };
+    start: number;
+    end: number;
   };
 }
 
 const FindingModalForm: React.FC<{
   audit: Audit;
   auditId: string | string[];
-  setOpen : any
+  setOpen: any;
 }> = ({ audit, auditId, setOpen }) => {
-
-    let upAudit : any = audit;
+  let upAudit: any = audit;
 
   const updateFindings = async () => {
-   await axios.patch(`http://localhost:3000/api/audit/63621a07fbe06ba302b9b612`, mfAudit).then((res) => {
+    await axios
+      .patch(
+        `http://localhost:3000/api/audit/63621a07fbe06ba302b9b612`,
+        mfAudit
+      )
+      .then((res) => {
         // console.log(audit)
         // setOpen(false)
         // Router.push(`/audit/${auditId}`);
-    }).catch((e) => {
+      })
+      .catch((e) => {
         console.log(e);
-    })
+      });
   };
 
   var auditToModify: Audit = audit;
@@ -62,10 +65,10 @@ const FindingModalForm: React.FC<{
       location: {
         type: data.location.type,
         name: data.location.name,
-        line_number: {
-          start: data.location.line_number.start,
-          end: data.location.line_number.end,
-        },
+        line_number: [{
+          start: data.location.start,
+          end: data.location.end,
+        }],
       },
     });
 
@@ -94,9 +97,7 @@ const FindingModalForm: React.FC<{
               <Controller
                 name="title"
                 control={control}
-                render={({ field }) => (
-                  <Input  label="Title" {...field} />
-                )}
+                render={({ field }) => <Input label="Title" {...field} />}
               />
             </Grid>
           </Grid.Container>
@@ -228,9 +229,7 @@ const FindingModalForm: React.FC<{
               <Controller
                 name="location.name"
                 control={control}
-                render={({ field }) => (
-                  <Input  placeholder="Name" {...field} />
-                )}
+                render={({ field }) => <Input placeholder="Name" {...field} />}
               />
             </Grid>
           </Grid.Container>
@@ -241,25 +240,20 @@ const FindingModalForm: React.FC<{
           <Grid.Container css={{ width: "100%", paddingLeft: "2px" }}>
             <Grid>
               <Controller
-                name="location.line_number.start"
+                name="location.start"
                 control={control}
                 render={({ field }) => (
-                  <Input
-                    
-                    placeholder="Start"
-                    type="number"
-                    {...field}
-                  />
+                  <Input placeholder="Start" type="number" {...field} />
                 )}
               />
             </Grid>
             <Spacer y={2} />
             <Grid>
               <Controller
-                name="location.line_number.end"
+                name="location.end"
                 control={control}
                 render={({ field }) => (
-                  <Input  placeholder="End" type="number" {...field} />
+                  <Input placeholder="End" type="number" {...field} />
                 )}
               />
             </Grid>
