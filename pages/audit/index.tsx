@@ -8,7 +8,7 @@ const Audit: React.FC = () => {
 
   const getAudits = async () =>
     axios
-      .get("http://localhost:3000/api/audit/")
+      .get("/api/audit/")
       .then((resp) => {
         setAudits(resp.data);
       })

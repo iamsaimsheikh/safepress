@@ -12,7 +12,7 @@ const SingleAuditInfo: NextPage = () => {
 
   const singleAuditInfo = async () => {
     await axios
-      .get(`http://localhost:3000/api/audit/${auditId}`)
+      .get(`/api/audit/${auditId}`)
       .then((resp) => {
         setAudit(resp.data);
         console.log(resp.data)

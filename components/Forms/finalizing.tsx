@@ -35,7 +35,7 @@ const Finalizing: React.FC<{ setStage: Dispatch<SetStateAction<string>> }> = ({
   const [eSummary, setESummary] = useState("")
   const onSubmit: SubmitHandler<IFormInput> = async (data) => {
     await axios
-      .post("http://localhost:3000/api/audit", {
+      .post("/api/audit", {
         version: data.version,
         executive_summary: eSummary,
         custom_audit_id: data.custom_audit_id,

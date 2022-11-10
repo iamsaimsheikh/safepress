@@ -35,7 +35,7 @@ const FindingModalForm: React.FC<{
   const updateFindings = async () => {
     await axios
       .patch(
-        `http://localhost:3000/api/audit/63621a07fbe06ba302b9b612`,
+        `/api/audit/63621a07fbe06ba302b9b612`,
         mfAudit
       )
       .then((res) => {
