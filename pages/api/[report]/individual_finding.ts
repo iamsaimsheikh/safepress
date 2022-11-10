@@ -334,7 +334,7 @@ const individualFinding = (audit: Audit) => {
 
       <section class="cardSection">
         <div class="card">
-          <div class="contract">${audit.commit_hashes[key].Label}</div>
+          <div class="contract">${audit.commit_hashes[key].label}</div>
           |
           <div class="location">
             <p>${finding.location.type}</p>

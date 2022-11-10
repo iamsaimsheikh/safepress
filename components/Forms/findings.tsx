@@ -1,4 +1,4 @@
-import react, { SetStateAction, useContext, useState, Dispatch, useEffect } from "react";
+import react, { SetStateAction, useContext, useState, Dispatch } from "react";
 import { Grid, Input, StyledInputLabel } from "@nextui-org/react";
 import { useForm, SubmitHandler, Controller } from "react-hook-form";
 import { Container, Row, Text, Spacer } from "@nextui-org/react";
@@ -28,54 +28,45 @@ interface IFormInput {
 }
 
 const Findings: React.FC<{setStage: Dispatch<SetStateAction<string>>}> = ({setStage}) => {
-  const {finding ,saveFinding} = useContext(FindingContext) as FindingContextType;
+  const {saveFinding} = useContext(FindingContext) as FindingContextType;
   const [description, setDescription] = useState("");
   const [recommendation, setRecommendation] = useState("");
-  const [findings, setFindings] = useState<Finding[]>([]);
+  const [title, setTitle] =  useState("");
+  const [classification, setClassification] = useState("");
+  const [status, setStatus] =  useState("");
+  const [type, setType] =  useState("");
+  const [name, setName] =  useState("");
+  const [lineStart, setLineStart]= useState<number>(0);
+  const [lineEnd, setLineEnd] =  useState<number>(0);
+  const [findings, setFindings] = useState<any>([]);
 
-  // const newFinding = (data : any) => {
-  //   setFindings((prev) => [...prev ,{
-  //     title: data.title,
-  //     description: description,
-  //     recommendation: recommendation,
-  //     classification: data.classification,
-  //     status: data.status,
-  //     location: {
-  //       type: data.location.type,
-  //       name: data.location.name,
-  //       line_number: [{
-  //         start: data.location.line_number.start,
-  //         end: data.location.line_number.end,
-  //       }],
-  //     },
-  //   }]);
-
-    
-  // }
-
-  useEffect(() => {
-
-  }, finding)
-
-  const { control, handleSubmit, register, reset } = useForm<IFormInput>();
-  const onSubmit: SubmitHandler<IFormInput> = (data) => {
-    saveFinding({
-      title: data.title,
+  const newFinding = () => {
+    setFindings((prev : any) => [...prev ,{
+      title: title,
       description: description,
       recommendation: recommendation,
-      classification: data.classification,
-      status: data.status,
+      classification: classification,
+      status: status,
       location: {
-        type: data.location.type,
-        name: data.location.name,
+        type: type,
+        name: name,
         line_number: [{
-          start: data.location.line_number.start,
-          end: data.location.line_number.end,
-        }]}});
+          start: lineStart,
+          end: lineEnd,
+        }],
+      },
+    }]);
 
     setDescription('');
     setRecommendation('');
+    saveFinding(findings)
     reset();
+  }
+
+  const { control, handleSubmit, reset } = useForm<IFormInput>();
+  const onSubmit: SubmitHandler<IFormInput> = (data) => {
+    saveFinding(findings)
+    setStage('Finalizing');
   };
 
   return (
@@ -104,7 +95,7 @@ const Findings: React.FC<{setStage: Dispatch<SetStateAction<string>>}> = ({setSt
                 name="title"
                 control={control}
                 render={({ field }) => (
-                  <Input required label="Title" {...field} />
+                  <Input required label="Title" onChange={e => setTitle(e.target.value)} />
                 )}
               />
             </Grid>
@@ -153,7 +144,7 @@ const Findings: React.FC<{setStage: Dispatch<SetStateAction<string>>}> = ({setSt
                   height: "5.5vh",
                   padding: "10px",
                 }}
-                {...register("classification")}
+                onChange={e => setClassification(e.target.value)}
               >
                 <option value="CRITICAL">CRITICAL</option>
                 <option value="HIGH">HIGH</option>
@@ -186,7 +177,7 @@ const Findings: React.FC<{setStage: Dispatch<SetStateAction<string>>}> = ({setSt
                   height: "5.5vh",
                   padding: "10px",
                 }}
-                {...register("status")}
+                onChange={e => setStatus(e.target.value)}
               >
                 <option value="CRITICAL">FIXED</option>
                 <option value="HIGH">TODO</option>
@@ -213,7 +204,7 @@ const Findings: React.FC<{setStage: Dispatch<SetStateAction<string>>}> = ({setSt
                   height: "5.5vh",
                   padding: "10px",
                 }}
-                {...register("location.type")}
+                onChange = {e => setType(e.target.value)}
               >
                 <option value="" disabled selected hidden>
                   Type
@@ -230,7 +221,7 @@ const Findings: React.FC<{setStage: Dispatch<SetStateAction<string>>}> = ({setSt
                 name="location.name"
                 control={control}
                 render={({ field }) => (
-                  <Input required placeholder="Name" {...field} />
+                  <Input required placeholder="Name" onChange={e => setName(e.target.value)} />
                 )}
               />
             </Grid>
@@ -246,7 +237,7 @@ const Findings: React.FC<{setStage: Dispatch<SetStateAction<string>>}> = ({setSt
                 name="location.line_number.start"
                 control={control}
                 render={({ field }) => (
-                  <Input required placeholder="Start" type='number' {...field} />
+                  <Input required placeholder="Start" type='number' onChange={e => setLineStart(e.target.value)} />
                 )}
               />
             </Grid>
@@ -256,7 +247,7 @@ const Findings: React.FC<{setStage: Dispatch<SetStateAction<string>>}> = ({setSt
                 name="location.line_number.end"
                 control={control}
                 render={({ field }) => (
-                  <Input required placeholder="End" type='number' {...field} />
+                  <Input required placeholder="End" type='number' onChange={e => setLineEnd(e.target.value)}  />
                 )}
               />
             </Grid>
@@ -277,7 +268,7 @@ const Findings: React.FC<{setStage: Dispatch<SetStateAction<string>>}> = ({setSt
                 paddingRight: "1vw",
               }}
             >
-              <Button size="xs" type="submit" >
+              <Button size="xs" onClick={newFinding} >
                 Add Finding
               </Button>
             </Grid>
@@ -288,7 +279,7 @@ const Findings: React.FC<{setStage: Dispatch<SetStateAction<string>>}> = ({setSt
                 paddingRight: "2vw",
               }}
             >
-              <Button size="xs" onPress={() => setStage('Finalizing')}>
+              <Button size="xs" type="submit">
                 Next
               </Button>
             </Grid>

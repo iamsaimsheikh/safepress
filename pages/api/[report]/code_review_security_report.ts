@@ -217,7 +217,7 @@ var CRSR = (audit: Audit) => {
             <div class="columnSection">
               <div>
               ${audit.commit_hashes.map((ch, key) => { return (
-                `<p key=${key}><b>${ch.Label}: </b>${ch.Value}</p>`
+                `<p key=${key}><b>${ch.label}: </b>${ch.value}</p>`
               )})}
               </div>
             </div>

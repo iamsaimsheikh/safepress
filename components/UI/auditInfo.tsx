@@ -274,7 +274,7 @@ const AuditInfo: React.FC<{ audit: Audit, auditId : string | string[] }> = ({ au
             }}
           />
           <Spacer y={0.5} />
-          <Grid css={{overflowY:'scroll', height:'100%', paddingRight:'20px'}}>
+          <Grid css={{overflowY:'scroll', height:'100%', paddingRight:'20px', width:'100%'}}>
           <AuditFindingCard findings={audit.findings} />
           </Grid>
           <FindingModal open={open} setOpen={setOpen} audit={audit} auditId={auditId} />

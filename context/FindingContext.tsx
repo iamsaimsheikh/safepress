@@ -12,8 +12,8 @@ export const FindingContext = React.createContext<FindingContextType | null>(nul
 
 const FindingProvider: React.FC<Props> = ({ children }) => {
   const [finding, setFinding] = React.useState<FindingType[] | undefined>();
-  const saveFinding = (f: FindingType[]) => {
-    setFinding((prev : any) => [...prev , {f}]);
+  const saveFinding = (finding: FindingType[]) => {
+    setFinding(finding);
   };
   return (
     <FindingContext.Provider value={{ finding, saveFinding }}>
