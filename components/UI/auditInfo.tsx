@@ -12,6 +12,7 @@ import { Audit } from "../../types/types";
 import AuditFindingCard from "./auditFindingCard";
 import FindingModal from "./newFindingModal";
 const download = require('downloadjs')
+const FileDownload = require('js-file-download')
 
 const AuditInfo: React.FC<{ audit: Audit, auditId : string | string[] }> = ({ audit, auditId }) => {
 
@@ -19,10 +20,11 @@ const AuditInfo: React.FC<{ audit: Audit, auditId : string | string[] }> = ({ au
 
     const downloadPDF = async () => {
       await axios.get(`/api/${auditId}`, {
+        method:'GET',
         responseType:'blob'
       }
       ).then((resp) => {
-        download(resp.data,'report',"application/pdf")
+        FileDownload(resp.data,'report',"application/pdf")
       }).catch(e => {
         console.log("error here")
         console.error(e.response.data);
