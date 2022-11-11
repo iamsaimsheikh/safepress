@@ -7,29 +7,43 @@ import {
   Button,
 } from "@nextui-org/react";
 import axios from "axios";
+import { writeFile } from "fs";
 import { useState } from "react";
+import { blob } from "stream/consumers";
 import { Audit } from "../../types/types";
 import AuditFindingCard from "./auditFindingCard";
 import FindingModal from "./newFindingModal";
-const download = require('downloadjs')
-const FileDownload = require('js-file-download')
+const download = require("downloadjs");
+const FileDownload = require("js-file-download");
 
-const AuditInfo: React.FC<{ audit: Audit, auditId : string | string[] }> = ({ audit, auditId }) => {
+const AuditInfo: React.FC<{ audit: Audit; auditId: string | string[] }> = ({
+  audit,
+  auditId,
+}) => {
+  const [open, setOpen] = useState(false);
 
-    const [open, setOpen] = useState(false);
-
-    const downloadPDF = async () => {
-      await axios.get(`/api/${auditId}`, {
-        method:'GET',
-        responseType:'blob'
-      }
-      ).then((resp) => {
-        FileDownload(resp.data,'report',"application/pdf")
-      }).catch(e => {
-        console.log("error here")
-        console.error(e.response.data);
+  const downloadPDF = async () => {
+    await axios
+      .get(`/api/${auditId}`, {
+        method: "get",
+        responseType: "blob",
       })
-    }
+      .then((response) => {
+        const downloadUrl = window.URL.createObjectURL(new Blob([response.data]));
+
+        const link = document.createElement("a");
+
+        link.href = downloadUrl;
+
+        link.setAttribute("download", "report.pdf"); //any other extension
+
+        document.body.appendChild(link);
+
+        link.click();
+
+        link.remove();
+      });
+  };
 
   return (
     <Container
@@ -208,7 +222,7 @@ const AuditInfo: React.FC<{ audit: Audit, auditId : string | string[] }> = ({ au
             {audit.commit_hashes.map((ch, key) => {
               return (
                 <Text
-                key={key}
+                  key={key}
                   css={{
                     flexDirection: "row",
                     display: "flex",
@@ -235,35 +249,50 @@ const AuditInfo: React.FC<{ audit: Audit, auditId : string | string[] }> = ({ au
             height: "70vh !important",
             flexDirection: "column",
             paddingLeft: "2vw",
-            
-            
           }}
         >
-          <Grid.Container css={{
-            display: "flex",
-            alignItems: "start",
-            justifyContent: "start",
-            flexDirection: "row",
-            paddingRight:'30px'
-          }}>
-          <Text h3 css={{ paddingLeft: "0.1vw" }}>
-                Findings
-              </Text>
-              <Spacer x={0.5}/>
-            <Grid css={{marginTop:'8px'}}>
-              <Button onPress={() => {setOpen(!open)}} bordered size="xs" color="primary" auto>
-               + Add Finding
+          <Grid.Container
+            css={{
+              display: "flex",
+              alignItems: "start",
+              justifyContent: "start",
+              flexDirection: "row",
+              paddingRight: "30px",
+            }}
+          >
+            <Text h3 css={{ paddingLeft: "0.1vw" }}>
+              Findings
+            </Text>
+            <Spacer x={0.5} />
+            <Grid css={{ marginTop: "8px" }}>
+              <Button
+                onPress={() => {
+                  setOpen(!open);
+                }}
+                bordered
+                size="xs"
+                color="primary"
+                auto
+              >
+                + Add Finding
               </Button>
             </Grid>
-              <Spacer x={15.2}/>
-            <Grid css={{marginTop:'8px'}}>
+            <Spacer x={15.2} />
+            <Grid css={{ marginTop: "8px" }}>
               <Button size="xs" color="primary" auto>
                 Export As HTML
               </Button>
             </Grid>
-            <Spacer x={0.5}/>
-            <Grid css={{marginTop:'8px'}}>
-              <Button size="xs" color="secondary" auto onPress={() => {downloadPDF()}}>
+            <Spacer x={0.5} />
+            <Grid css={{ marginTop: "8px" }}>
+              <Button
+                size="xs"
+                color="secondary"
+                auto
+                onPress={() => {
+                  downloadPDF();
+                }}
+              >
                 Export As PDF
               </Button>
             </Grid>
@@ -277,10 +306,22 @@ const AuditInfo: React.FC<{ audit: Audit, auditId : string | string[] }> = ({ au
             }}
           />
           <Spacer y={0.5} />
-          <Grid css={{overflowY:'scroll', height:'100%', paddingRight:'20px', width:'100%'}}>
-          <AuditFindingCard findings={audit.findings} />
+          <Grid
+            css={{
+              overflowY: "scroll",
+              height: "100%",
+              paddingRight: "20px",
+              width: "100%",
+            }}
+          >
+            <AuditFindingCard findings={audit.findings} />
           </Grid>
-          <FindingModal open={open} setOpen={setOpen} audit={audit} auditId={auditId} />
+          <FindingModal
+            open={open}
+            setOpen={setOpen}
+            audit={audit}
+            auditId={auditId}
+          />
         </Grid>
       </Grid.Container>
     </Container>
